@@ -1,0 +1,24 @@
+{
+  "name": "eli5-server",
+  "version": "1.0.0",
+  "description": "API endpoint for eli5 extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npm-watch start",
+    "start": "npx functions-framework --target=eli5"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "openai": "^3.0.0"
+  },
+  "watch": {
+    "start": "*.js"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^3.1.2",
+    "npm-watch": "^0.11.0"
+  }
+}
