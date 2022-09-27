@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch start",
-    "start": "npx functions-framework --target=eli5"
+    "watch": "HTTPS=true npm start",
+    "start": "HTTPS=true npx functions-framework --target=eli5"
   },
   "author": "",
   "license": "ISC",

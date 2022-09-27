@@ -1,13 +1,25 @@
+// See https://stackoverflow.com/questions/13917047/how-to-get-a-content-script-to-load-after-a-pages-javascript-has-executed
+// https://stackoverflow.com/questions/11901074/javascript-call-a-function-after-specific-time-period
+
 console.log("Starting experimental leveling system");
 
-// Swap out http://placekitten.com/200/300
+window.addEventListener("load", myMain, false);
 
-/*
-<a href="/videos/clean-code-fundamentals/9780134661742/" class="orm-Link-root orm-Card-link orm-Card-fullCardLink ">Clean Code Fundamentals</a>
-*/
+function myMain(evt) {
+  var jsInitChecktimer = setTimeout(replaceIt, 1000);
 
-let links = document.getElementsByTagName("a");
-
-for (link of links) {
-  console.log(link);
+  function replaceIt() {
+    document.querySelectorAll("a").forEach((link) => {
+      if (link.className.indexOf("orm-Card-link") > -1) {
+        let title = encodeURIComponent(link.innerText);
+        let url = `https://localhost:8081?format=svg&title=${title}`;
+        let img = document.createElement("img");
+        img.src = url;
+        img.style = "width: 200px; height: 100px;";
+        //link.parentNode.insertBefore(img, link.nextSibling);
+        link.parentNode.replaceChild(img, link);
+        console.log("Replacing", url);
+      }
+    });
+  }
 }

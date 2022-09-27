@@ -90,16 +90,20 @@ exports.eli5 = async (req, res) => {
     // Set a convenience variable for the payload
     const format = req.query.format || "json";
     const title = req.query.title;
+    const debug = req.query.debug || false;
     var prompt = PROMPT + title + " => ";
 
     try {
-      const completion = await openai.createCompletion({
-        prompt: prompt,
-        model: "text-davinci-002",
-        temperature: 0,
-        max_tokens: 10,
-      });
-      let level = completion.data.choices[0].text.trim();
+      let level = "intermediate";
+      if (!debug) {
+        const completion = await openai.createCompletion({
+          prompt: prompt,
+          model: "text-davinci-002",
+          temperature: 0,
+          max_tokens: 10,
+        });
+        level = completion.data.choices[0].text.trim();
+      }
       // Return the first message from the completion response and use as the response
       if (format === "svg") {
         res.setHeader("Content-Type", "image/svg+xml");

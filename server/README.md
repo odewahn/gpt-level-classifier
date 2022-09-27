@@ -8,6 +8,16 @@ Local testing with hot reload:
 npm start watch
 ```
 
+Note that chrome will complain about not using HTTPS, and it doesn't seem like the `functions-framework` can do provide that. So, I'm using:
+
+https://github.com/cameronhunter/local-ssl-proxy
+
+```
+npm install -g local-ssl-proxy
+
+local-ssl-proxy --source 8081 --target 8080
+```
+
 ### Deploy as a cloud function
 
 ```
