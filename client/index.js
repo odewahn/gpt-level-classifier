@@ -12,13 +12,10 @@ function myMain(evt) {
     document.querySelectorAll("a").forEach((link) => {
       if (link.className.indexOf("orm-Card-link") > -1) {
         let title = encodeURIComponent(link.innerText);
-        let url = `https://localhost:8081?format=svg&title=${title}`;
         let img = document.createElement("img");
-        img.src = url;
-        img.style = "width: 200px; height: 100px;";
-        //link.parentNode.insertBefore(img, link.nextSibling);
+        //img.src = `https://localhost:8081?format=svg&title=${title}`;
+        img.src = `https://us-central1-gpt3-experiments-sparktime.cloudfunctions.net/gpt3_content_level_classifier?format=svg&title=${title}`;
         link.parentNode.replaceChild(img, link);
-        console.log("Replacing", url);
       }
     });
   }

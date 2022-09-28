@@ -52,28 +52,32 @@ Practical Linear Algebra for Data Science => expert
 
 function generateSVG(level) {
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50">
-
+  <svg xmlns="http://www.w3.org/2000/svg" width="200" height="40" viewBox="0 0 200 40">
     <defs>
-    <filter id="dropshadow" height="130%">
-  <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> <!-- stdDeviation is how much to blur -->
-  <feOffset dx="2" dy="2" result="offsetblur"/> <!-- how much to offset -->
-  <feComponentTransfer>
-    <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
-  </feComponentTransfer>
-  <feMerge> 
-    <feMergeNode/> <!-- this contains the offset blurred image -->
-    <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
-  </feMerge>
-  </filter>
-  </defs>
-  
-       <rect x="1" y="1" width="190" height="40" fill="gainsboro" filter="url(#dropshadow)" stroke="black" stroke-width="1" ry="20" rx="20"/>
-       <text x="30" y="25">${level.toUpperCase()}</text>
-    </svg>`;
+      <filter id="dropshadow" height="130%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <!-- stdDeviation is how much to blur -->
+        <feOffset dx="2" dy="2" result="offsetblur"/>
+        <!-- how much to offset -->
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.5"/>
+          <!-- slope is the opacity of the shadow -->
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <!-- this contains the offset blurred image -->
+          <feMergeNode in="SourceGraphic"/>
+          <!-- this contains the element that the filter is applied to -->
+        </feMerge>
+      </filter>
+    </defs>
+    <rect x="1" y="1" width="190" height="35" fill="gainsboro" filter="url(#dropshadow)" stroke="black" stroke-width="1" ry="20" rx="20"/>
+    <text x="30" y="25" font-family="Arial, Helvetica, sans-serif">${level.toUpperCase()}</text>
+  </svg>
+  `;
 }
 
-exports.eli5 = async (req, res) => {
+exports.gpt3_content_level_classifier = async (req, res) => {
   // Set CORS headers for preflight requests
   // Allows GETs from any origin with the Content-Type header
   // and caches preflight response for 3600s
