@@ -2,7 +2,7 @@
 
 O'Reilly customers frequently object to our lack of content difficulty ratings (e.g., beginner, intermediate, or advanced). We've explored various ways to generate this metadata (ML models, Mechanical Turk, scraping data from publishing partners, etc.), but none have proved viable.
 
-This brief describes how we might use OpenAI's GPT-3 language model as a solution. The idea is to create a narrative description called a "prompt" that descibes what we want and then ask GPT-3 to propose a level based on a given title. For example:
+This brief describes how we might use OpenAI's GPT-3 language model as a solution. The idea is to create a narrative description called a "prompt" that describes what we want and then ask GPT-3 to propose a level based on a given title. For example:
 
 ```
 I have a library of various learning materials consisting of books, courses and videos.  They
@@ -52,13 +52,13 @@ The advantages of this approach include:
 - _Editorially driven_. This approach allows content experts, rather than engineers, to tweak the prompt and tune the results. This iterative process, sometimes called "prompt engineering", will let us refine the language in the prompt until it provides a desired level of accuracy.
 - _Scalablity_. It is trivial to apply the model to our entire corpus of content.
 - _No training data_. It does not require extensive training data to build a formal classifier. The need for thousands of samples has been a major impediment to prior efforts, and this approach eliminates the need almost entirely.
-- _Cost effectiveness_. My initial estimates are that it would cost around $500 to compute difficulty levels for all content. (This is just raw cost of the API, and excludes things like the time required to refine the prompt.)
+- _Cost effectiveness_. My initial estimates are that it would cost around $500 to compute difficulty levels for all content. (This is just the raw cost of the API and excludes things like the time required to refine the prompt.)
 
 Some disadvantages include:
 
-- _The "Black box" problem_. GPT-3 is a black box, so it's impossible to understand why it makes the choices it makes. Unlike a tradional programming language, one can only influence it by altering the prompt. While this might have the desired effect on some cases, it might also lead to poorer performance in other areas. We can counter this with a rigorous process for evaluating the overall accuracy (see below).
+- _The "Black box" problem_. GPT-3 is a black box, so it's impossible to understand why it makes the choices it makes. Unlike a traditional programming language, one can only influence it by altering the prompt. While this might have the desired effect on some cases, it might also lead to poorer performance in other areas. We can counter this with a rigorous process for evaluating the overall accuracy (see below).
 - _Reliance on an external vendor_. There's an argument that this should be an in-house competency. Until we have capacity for this, however, an outside vendor make sense, as it does with Miso.
-- _Potentially lower quality than a human rating_. A learner who digs deeply into the content might ultimately disagree with GPT-3's classification. Of course, the same might be true of any ranking system, even one created by the author of the learning content, since level of difficulty is inherently subjective. (For example, "Introduction to Quantum Physics" would be a beginner title to a physicist, but I would find it baffling.) Consequently, we should build in some type of feedback mechanism from users for this or any other ranking system to evaluate the overall credibility of this metadata.
+- _Potentially lower quality than a human rating_. A learner who digs deeply into the content might ultimately disagree with GPT-3's classification. Of course, the same might be true of any ranking system, even one created by the author of the learning content, since level of difficulty is inherently subjective. (For example, "Introduction to Quantum Physics" would be a beginner title for a physicist, but I would find it baffling.) Consequently, we should build in some type of feedback mechanism from users for this or any other ranking system to evaluate the overall credibility of this metadata.
 
 ## Process
 
@@ -69,7 +69,7 @@ The success of this approach hinges on finding a prompt that accurately classifi
 3. Evaluate the model's failures and update the prompt accordingly
 4. Go back to step 2 and repeat until we achieve the desired accuracy
 
-Once the model is performing adequately, we can then compute the levels across the entire corpus. The data can then be used as part of a "difficuly level" microservice, incorporated as a search facet, or used wherever it's needed in the product experience. The classification process could also be added as a step in the ingestion process, similar to the way we added automated transcriptions for videos.
+Once the model is performing adequately, we can then compute the levels across the entire corpus. The data can then be used as part of a "difficulty level" microservice, incorporated as a search facet, or used wherever it's needed in the product experience. The classification process could also be added as a step in the ingestion process, similar to the way we added automated transcriptions for videos.
 
 ## Measuring accuracy
 
@@ -94,7 +94,7 @@ NEED SOME STATISTICS WORK HERE
 
 ### Measuring accuracy by using GPT-3 against itself
 
-Human-in-the-loop evaluators might be expensive, difficult to find, and/or hard to manage. Might we use GPT-3 adversarialy to check its own answers? In other words, GPT-3 in the loop.
+Human-in-the-loop evaluators might be expensive, difficult to find, and/or hard to manage. Might we use GPT-3 adversarially to check its own answers? In other words, GPT-3 in the loop.
 
 As inspired by Adam Witwer, we could have GPT-3 evaluate its own answer. For example, GPT-3 might classify "Bash Shell Scripting" as an intermediate title:
 
@@ -102,9 +102,9 @@ Prompt: `Do you agree that "Bash Shell Scripting" is an intermediate level cours
 
 Response: `No. Bash shell scripting is an advanced topic because it requires knowledge of the Linux command line.`
 
-While a human evaluator might not always have the same answer, applied in large enough quantities something like this should provide a meaningful accuracy measurment.
+While a human evaluator might not always have the same answer, applied in large enough quantities something like this should provide a meaningful accuracy measurement.
 
-To do this we'd generate a sample of size `N`, use GPT-3 to evaluate the results to find `f`, and then compute the accuracy as described previously. Since it's entirely automated, we could repeat this process however many times we need to get a reasonable meaure of the overall accuracy. (It's worth noting that this process could also measure the quality for any of our classification system, such as topic assignments.)
+To do this we'd generate a sample of size `N`, use GPT-3 to evaluate the results to find `f`, and then compute the accuracy as described previously. Since it's entirely automated, we could repeat this process however many times we need to get a reasonable measure of the overall accuracy. (It's worth noting that this process could also measure the quality of any of our classification systems, such as topic assignments.)
 
 Taking this idea further, you could imagine a process where you use GPT-3 to suggest improvements to the prompt itself. For example:
 
@@ -128,7 +128,7 @@ This might be pushing the boundaries, but it should be relatively simple to impl
 
 ## Cost Analysis
 
-Once we have a prompt that yields an acceptable level of accuracy, we'll need to apply it to the full list of content title. Here are a few assumptions needed to estimate the costs for this:
+Once we have a prompt that yields an acceptable level of accuracy, we'll need to apply it to the full list of content. Here are a few assumptions needed to estimate the costs for this:
 
 - ~70,000 titles to classify
 - ~300 tokens per prompt
@@ -142,7 +142,7 @@ So, the cost to classify the full catalog would be:
 
 I've built a minimal proof of concept to test key parts of this idea. It consists of two parts: a server and a client.
 
-The `server` is a cloud function that submits a hard-coded initial prompt that's paired with with a specific work to be classified. The function then returns the classification, either as JSON output or as an SVG image. Here's the JSON format:
+The `server` is a cloud function that submits a hard-coded initial prompt that's paired with a specific work to be classified. The function then returns the classification, either as JSON output or as an SVG image. Here's the JSON format:
 
 ```
 http GET https://us-central1-gpt3-experiments-sparktime.cloudfunctions.net/gpt3_content_level_classifier?format=json&title=learning+go
@@ -164,7 +164,7 @@ http GET https://us-central1-gpt3-experiments-sparktime.cloudfunctions.net/gpt3_
   </svg>
 ```
 
-NB: _You can pass `debug=true` in the query string to supress the call to OpenAI. The level returned is always `intermediate`_.
+NB: _You can pass `debug=true` in the query string to suppress the call to OpenAI. The level returned is always `intermediate`_.
 
 The `client` is a Chrome extension that runs on every page in the learning platform. Whenever it finds a card element title (i.e., a link with class `orm-Card-link`), it replaces it with an `<img>` tag that links to the SVG output of the classifier:
 
@@ -190,7 +190,7 @@ There are two main parts to the PoC: the server and the client.
 
 The server code is in the `./server` directory of this repo. It's deployed as a cloud function, and uses the Google `functions-framework` and `npm-watch` for local development.
 
-To get started, run `npm install` in the `./server` direcory. Once that's finished, run
+To get started, run `npm install` in the `./server` directory. Once that's finished, run
 
 ```
 npm start watch
@@ -254,5 +254,5 @@ You'll then have to change the local URL for the server function to use the prox
 - [ ] Cache prompt in memory store and load it on each invocation of the model
 - [ ] Move prompt to its own repo and then use a webhook to post it to memeorystore when it is changed. Be sure to also push the SHA of the repo so that you can know what version of the prompt is used
 - [ ] Develop a sampling plan and a way to measure quality control of the prompt
-- [ ] Develop an API that combines the product metadata (especially ourn) with the prediction. This API should also have a way for someone to manualy override a prediciton in a way that is sticky across different applications of the model.
+- [ ] Develop an API that combines the product metadata (especially ourn) with the prediction. This API should also have a way for someone to manually override a prediction in a way that is sticky across different applications of the model.
 - [ ] Develop the evaluator model and integrate into a sampling plan
