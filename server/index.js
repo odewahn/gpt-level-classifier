@@ -99,6 +99,7 @@ exports.gpt3_content_level_classifier = async (req, res) => {
 
     try {
       let level = "intermediate";
+      // Skip calling OpenAI if we're in debug mode
       if (!debug) {
         const completion = await openai.createCompletion({
           prompt: prompt,
