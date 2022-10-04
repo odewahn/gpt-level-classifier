@@ -2,7 +2,7 @@
 
 O'Reilly customers frequently object to our lack of content difficulty ratings (e.g., beginner, intermediate, or advanced). We've explored various ways to generate this metadata (ML models, Mechanical Turk, scraping data from publishing partners, etc.), but none have proved viable.
 
-This brief describes how we might use OpenAI's GPT-3 language model as a solution. The idea is to create a narrative description called a "prompt" that describes what we want and then ask GPT-3 to propose a level based on a given title. For example:
+This brief describes how we might use OpenAI's GPT-3 language model as a solution. The idea is to create a narrative description called a "prompt" that describes what we want and then use the GPT-3 completion API to propose a level based on a given title. For example:
 
 ```
 I have a library of various learning materials consisting of books, courses and videos.  They
@@ -50,14 +50,14 @@ Here's some sample output from the PoC:
 The advantages of this approach include:
 
 - _Editorially driven_. This approach allows content experts, rather than engineers, to tweak the prompt and tune the results. This iterative process, sometimes called "prompt engineering", will let us refine the language in the prompt until it provides a desired level of accuracy.
-- _Scalablity_. It is trivial to apply the model to our entire corpus of content.
+- _Scalability_. It is trivial to apply the model to our entire corpus of content.
 - _No training data_. It does not require extensive training data to build a formal classifier. The need for thousands of samples has been a major impediment to prior efforts, and this approach eliminates the need almost entirely.
 - _Cost effectiveness_. My initial estimates are that it would cost around $500 to compute difficulty levels for all content. (This is just the raw cost of the API and excludes things like the time required to refine the prompt.)
 
 Some disadvantages include:
 
 - _The "Black box" problem_. GPT-3 is a black box, so it's impossible to understand why it makes the choices it makes. Unlike a traditional programming language, one can only influence it by altering the prompt. While this might have the desired effect on some cases, it might also lead to poorer performance in other areas. We can counter this with a rigorous process for evaluating the overall accuracy (see below).
-- _Reliance on an external vendor_. There's an argument that this should be an in-house competency. Until we have capacity for this, however, an outside vendor make sense, as it does with Miso.
+- _Reliance on an external vendor_. There's an argument that this should be an in-house competency. Until we have capacity for this, however, an outside vendor makes sense, as it does with Miso.
 - _Potentially lower quality than a human rating_. A learner who digs deeply into the content might ultimately disagree with GPT-3's classification. Of course, the same might be true of any ranking system, even one created by the author of the learning content, since level of difficulty is inherently subjective. (For example, "Introduction to Quantum Physics" would be a beginner title for a physicist, but I would find it baffling.) Consequently, we should build in some type of feedback mechanism from users for this or any other ranking system to evaluate the overall credibility of this metadata.
 
 ## Process
@@ -252,7 +252,7 @@ You'll then have to change the local URL for the server function to use the prox
 - [ ] Fix hot reload for `npm watch`
 - [ ] Cache results in google memory store
 - [ ] Cache prompt in memory store and load it on each invocation of the model
-- [ ] Move prompt to its own repo and then use a webhook to post it to memeorystore when it is changed. Be sure to also push the SHA of the repo so that you can know what version of the prompt is used
+- [ ] Move prompt to its own repo and then use a webhook to post it to Memorystore when it is changed. Be sure to also push the SHA of the repo so that you can know what version of the prompt is used
 - [ ] Develop a sampling plan and a way to measure quality control of the prompt
 - [ ] Develop an API that combines the product metadata (especially ourn) with the prediction. This API should also have a way for someone to manually override a prediction in a way that is sticky across different applications of the model.
 - [ ] Develop the evaluator model and integrate into a sampling plan
